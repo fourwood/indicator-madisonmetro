@@ -5,7 +5,15 @@ try:
     from gi.repository import AppIndicator3 as indicator
 except:
     from gi.repository import AppIndicator as indicator
-#import pymadisonmetro
+import pymadisonmetro
+
+keyfile = open('/home/fourwood/src/metro/indicator-madisonmetro/api.key', 'r')
+API_KEY = keyfile.readline().strip()
+keyfile.close()
+
+_SECONDS = 1000
+_MINUTES = 60 * _SECONDS
+_HOURS = 60 * _MINUTES
 
 class MadisonMetroIndicator:
     def __init__(self):
@@ -17,6 +25,9 @@ class MadisonMetroIndicator:
         self.ind.set_icon("/home/fourwood/src/metro/indicator-madisonmetro/indicator-madisonmetro.png")
 
         self.UPDATE_INTERVAL = 1 * 60 * 1000 # min * s * ms
+
+    def refresh(self, widget):
+        pass
 
     def quit(self, widget):
         #print("Quit.")
@@ -34,10 +45,17 @@ class MadisonMetroIndicator:
         #print("Menu setup.")
         self.menu = Gtk.Menu()
 
+        stop_name_item = self.add_menu_item(self.menu, "Stop name.")
+
+        arrival1 = self.add_menu_item(self.menu, "  Arrival 1.")
+        arrival2 = self.add_menu_item(self.menu, "  Arrival 2.")
+        arrival3 = self.add_menu_item(self.menu, "  Arrival 3.")
+
         separator = Gtk.SeparatorMenuItem()
         separator.show()
         self.menu.append(separator)
 
+        self.refresh_item = self.add_menu_item(self.menu, "Refresh", self.refresh)
         self.quit_item = self.add_menu_item(self.menu, "Quit", self.quit)
 
         self.menu.show()
